@@ -1,0 +1,172 @@
+<html>
+    <head>
+        <title></title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300&family=Pacifico&display=swap" rel="stylesheet">
+        <style type="text/css">
+            .wrap {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+            body {
+                padding: 5px;
+                background-color: #444791;
+            }
+            header,main,footer {
+                padding: 0;
+            }
+            header {
+                color: white;
+                font-family: 'Pacifico', cursive;
+                width: 100%;
+                display: flex;
+                height: auto;
+                vertical-align: middle;
+            }
+            #title {
+                font-size: xx-large;
+            }
+            #title_option {
+                font-size: small;
+                padding: 10px;
+            }
+            button {
+                --button_radius: 0.7em;
+                --button_color: #e8e8e8;
+                --button_outline_color: #000000;
+                font-size: 17px;
+                font-weight: bold;
+                border: none;
+                border-radius: var(--button_radius);
+                background: var(--button_outline_color);
+
+            }
+            .button_top {
+                display: block;
+                box-sizing: border-box;
+                border: 2px solid var(--button_outline_color);
+                border-radius: var(--button_radius);
+                padding: 0.7em 1.5em;
+                background: var(--button_color);
+                color: var(--button_outline_color);
+                transform: translateY(-0.2em);
+                transition: transform 0.1s ease;
+            }
+            button:hover .button_top {
+                transform: translateY(-0.33em);
+            }
+            button:active .button_top {
+                transform: translateY(0);
+            }
+            main {
+                background-color: white;
+                width: 100%;
+                height: 100%;
+                padding: 10px;
+                border-radius: 5px;
+                display: flex;
+            }
+            editor {
+                width: 50%;
+                height: 100%;
+                background-color: skyblue;
+            }
+            editor > textarea {
+                resize: none;
+                width: 100%;
+                height: 85vh;
+                border: none;
+            }
+            viewer {
+                width: 50%;
+                height: 100%;
+                padding: 10px;
+                font-family: -apple-system,BlinkMacSystemFont,"Segoe UI","Apple Color Emoji","Segoe UI Emoji","Segoe UI Web",sans-serif;
+                font-size: 14px;
+                color: #424242;
+                line-height: 20px;
+            }
+            viewer h1 {
+                font-size: 18px;
+                font-weight: 700;
+            }
+            viewer h2 {
+                font-size: 14px;
+                font-weight: 700;
+            }
+            viewer h3 {
+                font-size: 12px;
+                font-weight: 700;
+            }
+            viewer blockquote {
+                display: block;
+                margin: 5px 0px 5px 0px; /* top, right, buttom, left*/
+                padding: 7px 11px 7px 11px;
+                color: rgb(36, 36, 36);
+                background-color: rgb(245, 245, 245);
+                border-left-style: solid;
+                border-left-width: 4px;
+                border-left-color: rgb(209,209,209);
+            }
+            footer {
+                font-family: 'Pacifico', cursive;
+                font-size: x-small;
+                color: white;
+                width: 100%;
+                height: auto;
+                text-align: center;
+                padding-top: 5px;
+                padding-bottom: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrap">
+            <header>
+                <div id="title">Markdown to Html Converter</div>
+                <div id="title_option">powerd by markdown-wasm@1.2.0</div>
+                <button class="button" onclick="copyToClipboardAsHtml()">
+                  <span class="button_top">Copy to Clipboard!</span>
+                </button>
+            </header>
+            <main>
+                <editor>
+                    <textarea id='$input' class='input'># Hello, world!</textarea>
+                </editor>
+                <viewer id="$viewer"></viewer>
+            </main>
+            <footer>Copyright © 2022 hihigash. All Rights Reserved.</footer>
+        </div>
+        <script src='https://cdn.jsdelivr.net/npm/markdown-wasm@1.2.0/dist/markdown.min.js'></script>
+        <script>
+            window.onload = async () => {
+                await markdown.ready;
+                
+                $input.oninput = () => {
+                    var md = markdown.parse($input.value);
+                    $viewer.innerHTML = md;
+                };
+                
+                $input.oninput();
+            };
+
+            function copyToClipboardAsHtml()
+            {
+                const e = document.createElement('div');
+                e.innerHTML = $viewer.innerHTML;
+                e.style.position = 'fixed'
+                e.style.pointerEvents = 'none'
+                e.style.opacity = 0;
+                document.body.appendChild(e);
+                window.getSelection().removeAllRanges();
+                var range = document.createRange();
+                range.selectNode(e);
+                window.getSelection().addRange(range);
+                document.execCommand("copy");
+                document.body.removeChild(e);
+            }
+        </script>    
+    </body>
+</html>
